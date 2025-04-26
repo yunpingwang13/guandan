@@ -20,6 +20,8 @@ function App() {
     socket.on('roomCreated', (id) => {
       setRoomId(id);
       setError('');
+      setPlayerNames(['Player 1']);
+      setError(`Players in room: 1/4`);
     });
 
     socket.on('playerJoined', (data) => {

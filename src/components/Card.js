@@ -1,44 +1,58 @@
 import React from 'react';
-import { Paper, Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
+import { RED_JOKER, BLACK_JOKER } from '../shared/cardUtils';
 
 const Card = ({ suit, value, selected, onClick }) => {
-  // Return null if card data is missing
-  if (!suit || !value) {
-    return null;
-  }
-
-  const getSuitColor = (suit) => {
-    return suit === '♥' || suit === '♦' ? 'red' : 'black';
-  };
-
+  const isRed = suit === '♥' || suit === '♦' || suit === RED_JOKER;
+  const isBlack = suit === '♠' || suit === '♣' || suit === BLACK_JOKER;
+  
   return (
-    <Paper
-      elevation={selected ? 8 : 2}
+    <Box
       onClick={onClick}
       sx={{
         width: 80,
         height: 120,
+        backgroundColor: selected ? '#e3f2fd' : 'white',
+        border: '1px solid #ccc',
+        borderRadius: '8px',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
-        p: 1,
+        padding: '8px',
         cursor: 'pointer',
-        backgroundColor: selected ? '#e3f2fd' : 'white',
+        boxShadow: selected ? '0 0 10px #2196f3' : 'none',
+        transition: 'all 0.2s',
         '&:hover': {
           transform: 'translateY(-5px)',
-          transition: 'transform 0.2s',
-        },
+          boxShadow: '0 5px 15px rgba(0,0,0,0.1)'
+        }
       }}
     >
-      <Box sx={{ color: getSuitColor(suit) }}>
-        <Typography variant="h6">{value}</Typography>
-        <Typography variant="h6">{suit}</Typography>
+      <Box sx={{ 
+        color: isRed ? 'red' : isBlack ? 'black' : 'inherit',
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
+        textAlign: 'left'
+      }}>
+        {value === 'JOKER' ? (suit === RED_JOKER ? '🃏' : '🃟') : value}
       </Box>
-      <Box sx={{ color: getSuitColor(suit), transform: 'rotate(180deg)' }}>
-        <Typography variant="h6">{value}</Typography>
-        <Typography variant="h6">{suit}</Typography>
+      <Box sx={{ 
+        color: isRed ? 'red' : isBlack ? 'black' : 'inherit',
+        fontSize: '2.5rem',
+        textAlign: 'center'
+      }}>
+        {value === 'JOKER' ? (suit === RED_JOKER ? '🃏' : '🃟') : suit}
       </Box>
-    </Paper>
+      <Box sx={{ 
+        color: isRed ? 'red' : isBlack ? 'black' : 'inherit',
+        fontSize: '1.5rem',
+        fontWeight: 'bold',
+        textAlign: 'right',
+        transform: 'rotate(180deg)'
+      }}>
+        {value === 'JOKER' ? (suit === RED_JOKER ? '🃏' : '🃟') : value}
+      </Box>
+    </Box>
   );
 };
 

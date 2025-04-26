@@ -109,51 +109,24 @@ const Game = ({ gameState, socket, roomId, playerId }) => {
   const handleCardClick = (card, index) => {
     if (!card || !card.suit || !card.value) return;
     
-    // Find the group this card belongs to
-    const cardGroup = cardGroups.find(([_, cards]) => 
-      cards.some(c => c.card.suit === card.suit && c.card.value === card.value)
-    );
-    
-    if (!cardGroup) return;
-    
-    const [_, cards] = cardGroup;
-    // Find the index of the clicked card in its group
-    const clickedCardIndex = cards.findIndex(c => 
-      c.card.suit === card.suit && c.card.value === card.value
-    );
-    
     setSelectedCards(prev => {
-      // Get all cards below and including the clicked card
-      const cardsToToggle = cards.slice(clickedCardIndex);
-      
-      // Check if all these cards are already selected
-      const allSelected = cardsToToggle.every(({ card: c, index: i }) => 
-        prev.some(selected => 
-          selected.index === i && 
-          selected.card.suit === c.suit && 
-          selected.card.value === c.value
-        )
+      // Check if this specific card is already selected
+      const isSelected = prev.some(selected => 
+        selected.index === index && 
+        selected.card.suit === card.suit && 
+        selected.card.value === card.value
       );
       
-      if (allSelected) {
-        // If all are selected, deselect them
+      if (isSelected) {
+        // If selected, remove it
         return prev.filter(selected => 
-          !cardsToToggle.some(({ card: c, index: i }) => 
-            selected.index === i && 
-            selected.card.suit === c.suit && 
-            selected.card.value === c.value
-          )
+          !(selected.index === index && 
+            selected.card.suit === card.suit && 
+            selected.card.value === card.value)
         );
       } else {
-        // If not all are selected, select them
-        const newSelections = cardsToToggle.map(({ card: c, index: i }) => ({ card: c, index: i }));
-        return [...prev.filter(selected => 
-          !cardsToToggle.some(({ card: c, index: i }) => 
-            selected.index === i && 
-            selected.card.suit === c.suit && 
-            selected.card.value === c.value
-          )
-        ), ...newSelections];
+        // If not selected, add it
+        return [...prev, { card, index }];
       }
     });
   };

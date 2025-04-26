@@ -1,7 +1,7 @@
 const SUITS = ['♠', '♥', '♦', '♣'];
-const VALUES = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2'];
+const VALUES = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 const RED_JOKER = '🃏'; // Red joker
-const BLACK_JOKER = '🃏'; // Black joker
+const BLACK_JOKER = '🃟'; // Black joker
 
 const getCardValue = (card) => {
   if (!card || !card.value) return 0;
@@ -100,6 +100,23 @@ const getCombinationType = (cards) => {
     if (isStraight(sortedCards)) {
       return 'STRAIGHT';
     }
+  }if (cards.length === 6) {
+    const values = sortedCards.map(card => VALUES.indexOf(card.value));
+    if (values[0] === values[1] &&
+        values[1] === values[2] &&
+        values[3] === values[4] &&
+        values[4] === values[5] &&
+        values[0] + 1 === values[3]) {
+      return 'TWO_TRIPLETS';
+    }
+    if (values[0] === values[1] &&
+      values[2] === values[3] &&
+      values[4] === values[5] &&
+      values[0] + 1 === values[2] &&
+      values[2] + 1 === values[4]) {
+      return 'THREE_PAIRS';
+    }
+    return null;
   }
   return null;
 };
